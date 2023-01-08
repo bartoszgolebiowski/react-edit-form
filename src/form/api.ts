@@ -72,5 +72,3 @@ export const getComment = (postId: string): Promise<WithParentId<Comment>[]> =>
     fetch(`${URL}/posts/${postId}/comments`)
         .then((res) => res.json())
         .then((comments: Comment[]) => comments.map((comment) => ({ ...comment, parentId: postId })))
-
-
