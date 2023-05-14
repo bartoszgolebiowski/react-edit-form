@@ -53,7 +53,7 @@ const App = () => {
         </div>
       </fieldset>
       <fieldset>
-        <form key={key2}>
+        <form>
           <p>
             <label htmlFor="first">
               First:
