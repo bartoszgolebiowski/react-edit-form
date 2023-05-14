@@ -14,15 +14,14 @@ const initialValues = {
 
 const App = () => {
   const [key, setKey] = React.useState(String(Date.now()));
+  const [key2, setKey2] = React.useState(String(Date.now()));
   const generateKey = () => setKey(String(Date.now()));
+  const generateKey2 = () => setKey2(String(Date.now()));
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Form>
-        <button type="submit">Submit</button>
-      </Form>
       <fieldset>
-        <Form key={key} initialValues={initialValues} />
+        <Form key={key} />
         <div style={{ display: "flex", gap: "1rem" }}>
           <button type="submit">Submit</button>
           <button
@@ -36,6 +35,57 @@ const App = () => {
             Restore initial state
           </button>
         </div>
+      </fieldset>
+      <fieldset>
+        <Form key={key2} initialValues={initialValues} />
+        <div style={{ display: "flex", gap: "1rem" }}>
+          <button type="submit">Submit</button>
+          <button
+            onClick={generateKey2}
+            style={{
+              display: "inline",
+              padding: "1rem",
+              outline: "3px red dotted",
+            }}
+          >
+            Restore initial state
+          </button>
+        </div>
+      </fieldset>
+      <fieldset>
+        <form key={key2}>
+          <p>
+            <label htmlFor="first">
+              First:
+              <input type="text" id="first" defaultValue="1" />
+            </label>
+          </p>
+          <p>
+            <label htmlFor="second">
+              Second:
+              <input type="text" id="second" defaultValue="2" />
+            </label>
+          </p>
+          <p>
+            <label htmlFor="third">
+              Third:
+              <input type="text" id="third" defaultValue="3" />
+            </label>
+          </p>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <button type="submit">Submit</button>
+            <button
+              type="reset"
+              style={{
+                display: "inline",
+                padding: "1rem",
+                outline: "3px red dotted",
+              }}
+            >
+              Restore initial state
+            </button>
+          </div>
+        </form>
       </fieldset>
     </QueryClientProvider>
   );
