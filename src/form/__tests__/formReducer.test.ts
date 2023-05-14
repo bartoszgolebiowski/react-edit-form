@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { formReducer, getAllNodesForLevel, handleChange, selectComments, selectPosts, selectUsers } from "../formReducer"
+import { formReducer, getAllNodesForLevelAndParentGetters, handleChange, selectComments, selectPosts, selectUsers } from "../formReducer"
 
 const treeOnlyLevel0 = {
   '1': {},
@@ -80,22 +80,22 @@ const treeOnlyLevel2 = {
 }
 
 describe('formReducer', () => {
-  describe('getAllNodesForLevel', () => {
+  describe('getAllNodesForLevelAndParentGetters', () => {
     describe('treeOnlyLevel0', () => {
       it('should return for treeOnlyLevel0 root nodes for level 0 and no parent getter', () => {
-        const [nodes, parentGeter] = getAllNodesForLevel(treeOnlyLevel0, 0)
+        const [nodes, parentGeter] = getAllNodesForLevelAndParentGetters(treeOnlyLevel0, 0)
         expect(parentGeter).toStrictEqual([])
         expect(nodes[0]).toBe(treeOnlyLevel0)
       })
 
       it('should return for treeOnlyLevel0 no nodes for level 1 with parent getters from level 0', () => {
-        const [nodes, parentGeter] = getAllNodesForLevel(treeOnlyLevel0, 1)
+        const [nodes, parentGeter] = getAllNodesForLevelAndParentGetters(treeOnlyLevel0, 1)
         expect(parentGeter[0]()).toBe(treeOnlyLevel0)
         expect(nodes).toStrictEqual([{}, {}, {},])
       })
 
       it('should return for treeOnlyLevel0 no nodes for level 2 with parent getters from level 1', () => {
-        const [nodes, parentGeter] = getAllNodesForLevel(treeOnlyLevel0, 2)
+        const [nodes, parentGeter] = getAllNodesForLevelAndParentGetters(treeOnlyLevel0, 2)
         expect(parentGeter).toStrictEqual([])
         expect(nodes).toStrictEqual([])
       })
@@ -103,14 +103,14 @@ describe('formReducer', () => {
 
     describe('treeOnlyLevel1', () => {
       it('should return for treeOnlyLevel1 root nodes for level 0 and no parent getter', () => {
-        const [nodes, parentGeter] = getAllNodesForLevel(treeOnlyLevel1, 0)
+        const [nodes, parentGeter] = getAllNodesForLevelAndParentGetters(treeOnlyLevel1, 0)
         expect(parentGeter).toStrictEqual([])
         expect(nodes).toStrictEqual([treeOnlyLevel1])
         expect(nodes[0]).toBe(treeOnlyLevel1)
       })
 
       it('should return for treeOnlyLevel1 level 1 nodes for level 1 with parent getters from level 0', () => {
-        const [nodes, parentGeter] = getAllNodesForLevel(treeOnlyLevel1, 1)
+        const [nodes, parentGeter] = getAllNodesForLevelAndParentGetters(treeOnlyLevel1, 1)
         expect(nodes[0]).toBe(treeOnlyLevel1['1'])
         expect(nodes[1]).toBe(treeOnlyLevel1['2'])
         expect(nodes[2]).toBe(treeOnlyLevel1['3'])
@@ -118,7 +118,7 @@ describe('formReducer', () => {
       })
 
       it('should return for treeOnlyLevel1 no nodes for level 2 with correct parent getters from level 1', () => {
-        const [nodes, parentGeter] = getAllNodesForLevel(treeOnlyLevel1, 2)
+        const [nodes, parentGeter] = getAllNodesForLevelAndParentGetters(treeOnlyLevel1, 2)
         expect(nodes).toStrictEqual([{}, {}, {}, {}, {}, {}, {}, {}, {},])
         expect(parentGeter[0]()).toBe(treeOnlyLevel1['1'])
         expect(parentGeter[1]()).toBe(treeOnlyLevel1['1'])
@@ -134,14 +134,14 @@ describe('formReducer', () => {
 
     describe('treeOnlyLevel2', () => {
       it('should return for treeOnlyLevel2 root nodes for level 0 and no parent getter', () => {
-        const [nodes, parentGeter] = getAllNodesForLevel(treeOnlyLevel2, 0)
+        const [nodes, parentGeter] = getAllNodesForLevelAndParentGetters(treeOnlyLevel2, 0)
         expect(parentGeter).toStrictEqual([])
         expect(nodes).toStrictEqual([treeOnlyLevel2])
         expect(nodes[0]).toBe(treeOnlyLevel2)
       })
 
       it('should return for treeOnlyLevel2 level 1 nodes for level 1 with parent getters from level 0', () => {
-        const [nodes, parentGeter] = getAllNodesForLevel(treeOnlyLevel2, 1)
+        const [nodes, parentGeter] = getAllNodesForLevelAndParentGetters(treeOnlyLevel2, 1)
         expect(nodes[0]).toBe(treeOnlyLevel2['1'])
         expect(nodes[1]).toBe(treeOnlyLevel2['2'])
         expect(nodes[2]).toBe(treeOnlyLevel2['3'])
@@ -149,7 +149,7 @@ describe('formReducer', () => {
       })
 
       it('should return for treeOnlyLevel2 level 2 for level 2 with correct parent getters from level 1', () => {
-        const [nodes, parentGeter] = getAllNodesForLevel(treeOnlyLevel2, 2)
+        const [nodes, parentGeter] = getAllNodesForLevelAndParentGetters(treeOnlyLevel2, 2)
         expect(nodes[0]).toBe(treeOnlyLevel2['1']['11'])
         expect(nodes[1]).toBe(treeOnlyLevel2['1']['22'])
         expect(nodes[2]).toBe(treeOnlyLevel2['1']['33'])
