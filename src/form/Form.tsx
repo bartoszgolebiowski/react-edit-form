@@ -12,7 +12,7 @@ type Props = {
   initialValues?: typeof initial;
 };
 
-const Form = (props: Props) => {
+const Form = (props: React.PropsWithChildren<Props>) => {
   const { initialValues = initial } = props;
   const { values, onChange, onSubmit } = useForm(initialValues);
   const users = selectUsers(values);
@@ -101,7 +101,7 @@ const Form = (props: Props) => {
           </select>
         </label>
       </p>
-      <button type="submit">Submit</button>
+      {props.children}
     </form>
   );
 };

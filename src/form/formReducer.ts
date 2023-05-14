@@ -27,7 +27,7 @@ export const handleChange = (payload: PayloadLevel1AndMore | PayloadLevel0) => (
 
 type Actions = ReturnType<typeof handleChange>
 
-export const getAllNodesForLevel = (tree: FormTree, level: number): [FormTree[], (() => FormTree)[]] => {
+export const getAllNodesForLevelAndParentGetters = (tree: FormTree, level: number): [FormTree[], (() => FormTree)[]] => {
     // If we're at the root level, there are no children, so just return the root node
     if (level === 0) return [[tree], []]
 
@@ -58,27 +58,26 @@ export const getAllNodesForLevel = (tree: FormTree, level: number): [FormTree[],
     return [nodes, parentGetters]
 }
 
+const isParentId = (parentId: string | null): parentId is string => parentId !== null
+const isRootNode = (level: number, parentId: string | null) => level === 0 || parentId === null
+
 export const formReducer = (state: FormTree, action: Actions): FormTree => {
     switch (action.type) {
         case "CHANGE_VALUE":
             return produce(state, draft => {
                 const { id, parentId, level } = action.payload // get the id, parentId, and level from the action payload
-                const [nodes, parentsGetters] = getAllNodesForLevel(draft, level) // get all the nodes for the level specified by the action payload
+                const [nodes, parentsGetters] = getAllNodesForLevelAndParentGetters(draft, level) // get all the nodes for the level specified by the action payload
                 const node = nodes.find(node => node[id]) // find the node with the id specified by the action payload
-                if (node) { // if the node exists
+                if (node) { // if the node exists, we want to delete it
                     delete node[id] // delete the node
                     return draft; // return the draft
                 }
 
-                if (level === 0) { // if the level is 0, which means the node is a root node
+                if (isRootNode(level, parentId)) { // if the level is 0, which means the node is a root node
                     draft[id] = {} // set the draft node with the id specified by the action payload to an empty object
                     return draft; // return the draft
                 }
-
-                if (parentId === null) { // if the parentId is null, which means the node is a root node
-                    draft[id] = {} // set the draft node with the id specified by the action payload to an empty object
-                    return draft; // return the draft
-                }
+                if (!isParentId(parentId)) return draft; // if the parentId is null, return the draft
 
                 parentsGetters.forEach(getParent => { // for each parent getter
                     const parent = getParent() // get the parent
@@ -93,6 +92,10 @@ export const formReducer = (state: FormTree, action: Actions): FormTree => {
     }
 }
 
-export const selectUsers = (state: FormTree) => getAllNodesForLevel(state, 0)[0].flatMap((node) => Object.keys(node))
-export const selectPosts = (state: FormTree) => getAllNodesForLevel(state, 1)[0].flatMap((node) => Object.keys(node))
-export const selectComments = (state: FormTree) => getAllNodesForLevel(state, 2)[0].flatMap((node) => Object.keys(node))
+const getAllNodesForLevel = (tree: FormTree, level: number): FormTree[] => getAllNodesForLevelAndParentGetters(tree, level)[0]
+const flattenNodes = (nodes: FormTree) => Object.keys(nodes)
+const selectNodes = (state: FormTree, level: number) => getAllNodesForLevel(state, level)
+
+export const selectUsers = (state: FormTree, level = 0) => selectNodes(state, level).flatMap(flattenNodes)
+export const selectPosts = (state: FormTree, level = 1) => selectNodes(state, level).flatMap(flattenNodes)
+export const selectComments = (state: FormTree, level = 2) => selectNodes(state, level).flatMap(flattenNodes)
