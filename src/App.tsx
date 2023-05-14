@@ -21,36 +21,38 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <fieldset>
-        <Form key={key} />
-        <div style={{ display: "flex", gap: "1rem" }}>
-          <button type="submit">Submit</button>
-          <button
-            onClick={generateKey}
-            style={{
-              display: "inline",
-              padding: "1rem",
-              outline: "3px red dotted",
-            }}
-          >
-            Restore initial state
-          </button>
-        </div>
+        <Form key={key}>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <button type="submit">Submit</button>
+            <button
+              onClick={generateKey}
+              style={{
+                display: "inline",
+                padding: "1rem",
+                outline: "3px red dotted",
+              }}
+            >
+              Restore initial state
+            </button>
+          </div>
+        </Form>
       </fieldset>
       <fieldset>
-        <Form key={key2} initialValues={initialValues} />
-        <div style={{ display: "flex", gap: "1rem" }}>
-          <button type="submit">Submit</button>
-          <button
-            onClick={generateKey2}
-            style={{
-              display: "inline",
-              padding: "1rem",
-              outline: "3px red dotted",
-            }}
-          >
-            Restore initial state
-          </button>
-        </div>
+        <Form key={key2} initialValues={initialValues}>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <button type="submit">Submit</button>
+            <button
+              onClick={generateKey2}
+              style={{
+                display: "inline",
+                padding: "1rem",
+                outline: "3px red dotted",
+              }}
+            >
+              Restore initial state
+            </button>
+          </div>
+        </Form>
       </fieldset>
       <fieldset>
         <form>
